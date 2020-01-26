@@ -1,0 +1,13 @@
+merge into staging_complaint customercomplaint
+using(select complaint_id,complaint_type,description,complaint_status,compensation_amnt,compensation_type,flight_id_no from complaint) source
+on(source.complaint_id=customercomplaint.complain_key)
+when matched then 
+update set
+customercomplaint.complain_type=source.complaint_type,
+customercomplaint.complain_description=source.description,
+customercomplaint.complain_status=source.complaint_status,
+customercomplaint.complain_compensation=source.compensation_amnt,
+customercomplaint.compensation_type=source.compensation_type,
+customercomplaint.complain_flight_id_no=source.flight_id_no
+when not matched then
+insert values (complaint_sequence.nextval,source.complaint_type,source.description,source.complaint_status,source.compensation_amnt,source.compensation_type,source.complaint_id,source.flight_id_no);
